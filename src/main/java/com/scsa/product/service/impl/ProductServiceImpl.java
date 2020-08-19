@@ -17,10 +17,10 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
-    private ProductInfoDao productInfoRepository;
+    private ProductInfoDao productInfoDao;
 
     @Override
     public List<ProductInfo> findUpAll() {
-        return productInfoRepository.findByProductStatus(ProductStatusEnum.UP.getCode());
+        return productInfoDao.findByProductStatus(ProductStatusEnum.UP.getCode());
     }
 }

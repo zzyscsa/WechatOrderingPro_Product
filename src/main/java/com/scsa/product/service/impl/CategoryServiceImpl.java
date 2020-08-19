@@ -16,10 +16,10 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
-    private ProductCategoryDao productCategoryRepository;
+    private ProductCategoryDao productCategoryDao;
 
     @Override
     public List<ProductCategory> findByCategoryTypeIn(List<Integer> categoryTypeList) {
-        return productCategoryRepository.findByCategoryTypeIn(categoryTypeList);
+        return productCategoryDao.findByCategoryTypeIn(categoryTypeList);
     }
 }
