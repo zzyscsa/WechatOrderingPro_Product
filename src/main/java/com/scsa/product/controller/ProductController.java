@@ -10,9 +10,7 @@ import com.scsa.product.service.ProductService;
 import com.scsa.product.util.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,5 +69,17 @@ public class ProductController {
         }
 
         return ResultVOUtil.success(productVOList);
+    }
+
+    /**
+     * 获取商品列表（专门给订单服务）
+     * @param productIdList
+     * @return
+     */
+    //RequestParam接受的参数在请求头(?参数)，RequestBody接收的参数来自请求体
+    // 这传过来的是json字符串，RequestBody可以解析Body中的json格式数据
+    @PostMapping("/listForOrder") //使用了@RequestBody必须用post!
+    public List<ProductInfo> listForOrder(@RequestBody List<String> productIdList) {
+        return productService.findList(productIdList);
     }
 }

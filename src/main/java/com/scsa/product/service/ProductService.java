@@ -14,4 +14,9 @@ public interface ProductService {
      * 查询所有在架商品列表
      */
     List<ProductInfo> findUpAll();
+
+    /**
+     * 查询商品id集合的所有商品信息
+     */
+    List<ProductInfo> findList(List<String> productIdList);
 }
