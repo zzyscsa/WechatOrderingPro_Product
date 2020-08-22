@@ -3,9 +3,10 @@ package com.scsa.product.controller;
 import com.scsa.product.VO.ProductInfoVO;
 import com.scsa.product.VO.ProductVO;
 import com.scsa.product.VO.ResultVO;
+import com.scsa.product.common.DecreaseStockInput;
+import com.scsa.product.common.ProductInfoOutPut;
 import com.scsa.product.dataobject.ProductCategory;
 import com.scsa.product.dataobject.ProductInfo;
-import com.scsa.product.dto.CartDTO;
 import com.scsa.product.service.CategoryService;
 import com.scsa.product.service.ProductService;
 import com.scsa.product.util.ResultVOUtil;
@@ -80,12 +81,12 @@ public class ProductController {
     //RequestParam接受的参数在请求头(?参数)，RequestBody接收的参数来自请求体
     // 这传过来的是json字符串，RequestBody可以解析Body中的json格式数据
     @PostMapping("/listForOrder") //使用了@RequestBody必须用post!
-    public List<ProductInfo> listForOrder(@RequestBody List<String> productIdList) {
+    public List<ProductInfoOutPut> listForOrder(@RequestBody List<String> productIdList) {
         return productService.findList(productIdList);
     }
 
     @PostMapping("/decreaseStock")
-    public void decreaseStock(@RequestBody List<CartDTO> cartDTOList) {
-        productService.decreaseStock(cartDTOList);
+    public void decreaseStock(@RequestBody List<DecreaseStockInput> decreaseStockInputList) {
+        productService.decreaseStock(decreaseStockInputList);
     }
 }

@@ -1,5 +1,6 @@
 package com.scsa.product.service.impl;
 
+import com.scsa.product.common.ProductInfoOutPut;
 import com.scsa.product.dataobject.ProductInfo;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class ProductServiceImplTest {
 
     @Test
     public void findList() {
-        List<ProductInfo> list = productService.findList(Arrays.asList("1596464046810459451", "123457"));
+        List<ProductInfoOutPut> list = productService.findList(Arrays.asList("1596464046810459451", "123457"));
         Assert.assertTrue(list.size()>0);
     }
 }

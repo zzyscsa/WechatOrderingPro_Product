@@ -1,7 +1,8 @@
 package com.scsa.product.service;
 
+import com.scsa.product.common.DecreaseStockInput;
+import com.scsa.product.common.ProductInfoOutPut;
 import com.scsa.product.dataobject.ProductInfo;
-import com.scsa.product.dto.CartDTO;
 
 import java.util.List;
 
@@ -19,11 +20,11 @@ public interface ProductService {
     /**
      * 查询商品id集合的所有商品信息
      */
-    List<ProductInfo> findList(List<String> productIdList);
+    List<ProductInfoOutPut> findList(List<String> productIdList);
 
     /**
      * 扣减库存
-     * @param cartDTOList
+     * @param decreaseStockInputList
      */
-    void decreaseStock(List<CartDTO> cartDTOList);
+    void decreaseStock(List<DecreaseStockInput> decreaseStockInputList);
 }
