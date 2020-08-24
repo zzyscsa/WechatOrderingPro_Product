@@ -8,11 +8,14 @@ import com.scsa.product.enums.ProductStatusEnum;
 import com.scsa.product.enums.ResultEnum;
 import com.scsa.product.exception.ProductException;
 import com.scsa.product.service.ProductService;
+import com.scsa.product.util.JsonUtil;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +29,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductInfoDao productInfoDao;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     @Override
     public List<ProductInfo> findUpAll() {
@@ -47,6 +53,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void decreaseStock(List<DecreaseStockInput> decreaseStockInputList) {
+        List<ProductInfo> productInfoList = decreaseStockProcess(decreaseStockInputList);
+
+        //扣完库存向订单服务发送MQ消息,发送整个购物车对象，包括很多商品
+        List<ProductInfoOutPut> productInfoOutPutList = productInfoList.stream().map(e -> {
+            ProductInfoOutPut productInfoOutPut = new ProductInfoOutPut();
+            BeanUtils.copyProperties(e, productInfoOutPut);
+            return productInfoOutPut;
+        }).collect(Collectors.toList());
+        amqpTemplate.convertAndSend("productInfo", JsonUtil.toJson(productInfoOutPutList));
+
+    }
+
+    public List<ProductInfo> decreaseStockProcess(List<DecreaseStockInput> decreaseStockInputList) {
+        List<ProductInfo> productInfoList = new ArrayList<>();
         for (DecreaseStockInput decreaseStockInput : decreaseStockInputList) {
             Optional<ProductInfo> productInfoOptional = productInfoDao.findById(decreaseStockInput.getProductId());
             //判斷商品是否存在
@@ -62,6 +82,9 @@ public class ProductServiceImpl implements ProductService {
             }
             productInfo.setProductStock(result);
             productInfoDao.save(productInfo);
+
+            productInfoList.add(productInfo);
         }
+        return productInfoList;
     }
 }
