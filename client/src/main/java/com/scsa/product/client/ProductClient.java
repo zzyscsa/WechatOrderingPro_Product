@@ -3,6 +3,7 @@ package com.scsa.product.client;
 import com.scsa.product.common.DecreaseStockInput;
 import com.scsa.product.common.ProductInfoOutPut;
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -13,7 +14,8 @@ import java.util.List;
  * @Author: SCSA
  * @Date: 2020/8/22 18:55
  */
-@FeignClient(name = "product") //表示调用的是哪个应用,Feign接口和Controller对应
+//表示调用的是哪个应用,Feign接口和Controller对应, fallback表示服务降级对应的类
+@FeignClient(name = "product", fallback = ProductClient.ProductClientFallBack.class)
 public interface ProductClient {
 
     /**
@@ -28,4 +30,19 @@ public interface ProductClient {
 
     @PostMapping("/product/decreaseStock")
     void decreaseStock(@RequestBody List<DecreaseStockInput> decreaseStockInputList);
+
+    //Hystrix服务降级调用的方法
+    @Component
+    class ProductClientFallBack implements ProductClient {
+
+        @Override
+        public List<ProductInfoOutPut> listForOrder(List<String> productIdList) {
+            return null;
+        }
+
+        @Override
+        public void decreaseStock(List<DecreaseStockInput> decreaseStockInputList) {
+
+        }
+    }
 }
