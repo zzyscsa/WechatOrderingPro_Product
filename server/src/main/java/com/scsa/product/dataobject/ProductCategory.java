@@ -16,7 +16,6 @@ import java.util.Date;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @DynamicUpdate //自动填入当前更新时间
 public class ProductCategory {
@@ -34,6 +33,9 @@ public class ProductCategory {
 
     /** 修改时间 */
     private Date updateTime;
+
+    public ProductCategory() {
+    }
 
     public ProductCategory(String categoryName, Integer categoryType) {
         this.categoryName = categoryName;
